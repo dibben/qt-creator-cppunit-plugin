@@ -1,0 +1,6 @@
+/*!
+	\file  {{FILE_NAME}}
+	\brief The {{CLASS_NAME}} implementation
+	\date \$Date: {{DATE}} $
+*/
+

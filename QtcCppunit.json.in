@@ -1,0 +1,13 @@
+{
+	\"Name\" : \"QtcCppunit\",
+	\"Version\" : \"0.1\",
+	\"CompatVersion\" : \"$$QTCREATOR_COMPAT_VERSION\",
+	\"Experimental\" : true,
+	\"Vendor\" : \"David Dibben\",
+	\"Copyright\" : \"(C) 2014 David Dibben\",
+	\"License\" :  \"\",
+	\"Category\" : \"Custom Plugins\",
+	\"Description\" : \"Cpp Unit Helper plugin.\",
+	\"Url\" : \"\",
+	$$dependencyList
+}

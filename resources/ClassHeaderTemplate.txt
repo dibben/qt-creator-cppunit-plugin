@@ -1,0 +1,6 @@
+/*!
+	\class  {{CLASS_NAME}}
+	\date {{DATE}}
+
+	\brief
+*/

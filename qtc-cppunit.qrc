@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/ClassHeaderTemplate.txt</file>
+        <file>resources/HeaderTemplate.txt</file>
+        <file>resources/SourceBriefTemplate.txt</file>
+        <file>resources/SourceTemplate.txt</file>
+    </qresource>
+</RCC>
