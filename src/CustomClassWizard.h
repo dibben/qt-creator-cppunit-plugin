@@ -26,31 +26,35 @@ public:
 	explicit ClassNamePage(bool isTestClass, QWidget *parent = 0);
 
     bool isComplete() const { return m_isValid; }
-    Utils::NewClassWidget *newClassWidget() const { return m_newClassWidget; }
+	Utils::NewClassWidget* newClassWidget() const { return m_newClassWidget; }
 
 	bool	eventFilter(QObject* obj, QEvent* ev);
 
 private slots:
-    void slotValidChanged();
+
+	void	slotValidChanged();
 
 private:
-    void initParameters();
 
-	Utils::NewClassWidget* m_newClassWidget;
-	QLabel *m_warningLabel;
-    bool m_isValid;
-	bool m_isTestClass;
+	void	initParameters();
+	bool	lowercaseHeaderFiles();
+
+	Utils::NewClassWidget*	m_newClassWidget;
+	QLabel*					m_warningLabel;
+	bool					m_isValid;
+	bool					m_isTestClass;
+
 };
 
 
 struct CppCustomClassWizardParameters
 {
-    QString className;
-    QString headerFile;
-    QString sourceFile;
-    QString baseClass;
-    QString path;
-	Utils::NewClassWidget::ClassType classType;
+	QString m_className;
+	QString m_headerFile;
+	QString m_sourceFile;
+	QString m_baseClass;
+	QString m_path;
+	Utils::NewClassWidget::ClassType m_classType;
 };
 
 class CppCustomClassWizardDialog : public Core::BaseFileWizard
@@ -64,7 +68,7 @@ public:
 	CppCustomClassWizardParameters parameters() const;
 
 private:
-    ClassNamePage *m_classNamePage;
+	ClassNamePage*	m_classNamePage;
 };
 
 
@@ -72,21 +76,17 @@ class CppCustomClassWizard : public Core::BaseFileWizardFactory
 {
     Q_OBJECT
 public:
+
 	explicit CppCustomClassWizard(bool testClass);
 
 protected:
 
-
 	Core::BaseFileWizard *create(QWidget *parent, const Core::WizardDialogParameters &parameters) const;
 
-	Core::GeneratedFiles generateFiles(const QWizard *w,
-												QString *errorMessage) const;
-
+	Core::GeneratedFiles generateFiles(const QWizard *w, QString *errorMessage) const;
 
     QString sourceSuffix() const;
     QString headerSuffix() const;
-
-
 
 private:
 
@@ -95,10 +95,10 @@ private:
 
 	static QString	readFile(const QString& fileName, const QMap<QString, QString>& replacementMap);
 
-	bool	isTestClass;
+	bool	m_isTestClass;
 };
 
 } // namespace Internal
-} // namespace CppEditor
+} // namespace QtcCppunit
 
 #endif

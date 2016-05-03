@@ -4,8 +4,6 @@
 
 #include "extensionsystem/iplugin.h"
 
-#include <QSharedPointer>
-
 namespace QtcCppunit {
 namespace Internal {
 
@@ -20,17 +18,15 @@ public:
     bool initialize(const QStringList &arguments, QString *error_message);
     void extensionsInitialized();
 
-
 private slots:
 
     void createTest();
 	void switchTest();
 
-private:
 
 };
 
 } // namespace Internal
-} // namespace CppHelper
+} // namespace QtcCppunit
 
 #endif

@@ -80,6 +80,15 @@ ClassNamePage::ClassNamePage(bool isTestClass,QWidget *parent) :
     initParameters();
 }
 
+// Retrieve settings of CppTools plugin.
+bool ClassNamePage::lowercaseHeaderFiles()
+{
+	QString lowerCaseSettingsKey = QLatin1String(CppTools::Constants::CPPTOOLS_SETTINGSGROUP);
+	lowerCaseSettingsKey += QLatin1Char('/');
+	lowerCaseSettingsKey += QLatin1String(CppTools::Constants::LOWERCASE_CPPFILES_KEY);
+	const bool lowerCaseDefault = CppTools::Constants::lowerCaseFilesDefault;
+	return Core::ICore::settings()->value(lowerCaseSettingsKey, QVariant(lowerCaseDefault)).toBool();
+}
 
 // Set up new class widget from settings
 void ClassNamePage::initParameters()
@@ -87,7 +96,7 @@ void ClassNamePage::initParameters()
 	Utils::MimeDatabase mdb;
 	m_newClassWidget->setHeaderExtension(mdb.mimeTypeForName(QLatin1String(CppTools::Constants::CPP_HEADER_MIMETYPE)).preferredSuffix());
 	m_newClassWidget->setSourceExtension(mdb.mimeTypeForName(QLatin1String(CppTools::Constants::CPP_SOURCE_MIMETYPE)).preferredSuffix());
-	m_newClassWidget->setLowerCaseFiles(false);
+	m_newClassWidget->setLowerCaseFiles(lowercaseHeaderFiles());
 }
 
 /*!
@@ -119,8 +128,8 @@ void ClassNamePage::slotValidChanged()
 }
 
 CppCustomClassWizardDialog::CppCustomClassWizardDialog(bool isTestClass, const Core::BaseFileWizardFactory* factory, QWidget *parent) :
-	  Core::BaseFileWizard(factory, QVariantMap(), parent),
-	m_classNamePage(new ClassNamePage(isTestClass, this))
+		Core::BaseFileWizard(factory, QVariantMap(), parent),
+		m_classNamePage(new ClassNamePage(isTestClass, this))
 {
 
 	if (isTestClass) {
@@ -140,12 +149,12 @@ CppCustomClassWizardParameters  CppCustomClassWizardDialog::parameters() const
 {
 	CppCustomClassWizardParameters rc;
     const Utils::NewClassWidget *ncw = m_classNamePage->newClassWidget();
-    rc.className = ncw->className();
-    rc.headerFile = ncw->headerFileName();
-    rc.sourceFile = ncw->sourceFileName();
-    rc.baseClass = ncw->baseClassName();
-    rc.path = ncw->path();
-    rc.classType = ncw->classType();
+	rc.m_className = ncw->className();
+	rc.m_headerFile = ncw->headerFileName();
+	rc.m_sourceFile = ncw->sourceFileName();
+	rc.m_baseClass = ncw->baseClassName();
+	rc.m_path = ncw->path();
+	rc.m_classType = ncw->classType();
     return rc;
 }
 
@@ -153,7 +162,7 @@ CppCustomClassWizardParameters  CppCustomClassWizardDialog::parameters() const
 
 CppCustomClassWizard::CppCustomClassWizard(bool testClass)
 {
-	isTestClass = testClass;
+	m_isTestClass = testClass;
 
 	setCategory(QLatin1String("O.C++"));
 	setDisplayCategory(tr("C++"));
@@ -184,7 +193,7 @@ Core::BaseFileWizard *CppCustomClassWizard::create(QWidget *parent,
 											const Core::WizardDialogParameters &wizardDialogParameters) const
 {
 
-	CppCustomClassWizardDialog *wizard = new CppCustomClassWizardDialog(isTestClass, this, parent);
+	CppCustomClassWizardDialog *wizard = new CppCustomClassWizardDialog(m_isTestClass, this, parent);
 	foreach (QWizardPage *p, wizard->extensionPages())
         wizard->addPage(p);
     wizard->setPath(wizardDialogParameters.defaultPath());
@@ -196,8 +205,8 @@ Core::GeneratedFiles CppCustomClassWizard::generateFiles(const QWizard *w, QStri
 	const CppCustomClassWizardDialog *wizard = qobject_cast<const CppCustomClassWizardDialog *>(w);
 	CppCustomClassWizardParameters params = wizard->parameters();
 
-	const QString sourceFileName = Core::BaseFileWizardFactory::buildFileName(params.path, params.sourceFile, sourceSuffix());
-	const QString headerFileName = Core::BaseFileWizardFactory::buildFileName(params.path, params.headerFile, headerSuffix());
+	const QString sourceFileName = Core::BaseFileWizardFactory::buildFileName(params.m_path, params.m_sourceFile, sourceSuffix());
+	const QString headerFileName = Core::BaseFileWizardFactory::buildFileName(params.m_path, params.m_headerFile, headerSuffix());
 
 
 	Core::GeneratedFile sourceFile(sourceFileName);
@@ -206,8 +215,8 @@ Core::GeneratedFiles CppCustomClassWizard::generateFiles(const QWizard *w, QStri
 	Core::GeneratedFile headerFile(headerFileName);
 	headerFile.setEditorId((CppEditor::Constants::CPPEDITOR_ID));
 
-	if (isTestClass){
-        params.baseClass = QString::fromLatin1("CppUnit::TestFixture");
+	if (m_isTestClass){
+		params.m_baseClass = QString::fromLatin1("CppUnit::TestFixture");
 	}
 
     QString header, source;
@@ -266,22 +275,22 @@ bool CppCustomClassWizard::generateHeaderAndSource(const CppCustomClassWizardPar
 
 
     // Do we have namespaces?
-    QStringList namespaceList = params.className.split(QLatin1String("::"));
+	QStringList namespaceList = params.m_className.split(QLatin1String("::"));
     if (namespaceList.empty()) // Paranoia!
         return false;
 
 	const QString unqualifiedClassName = namespaceList.takeLast();
-	const QString guard = headerGuard(params.headerFile);
+	const QString guard = headerGuard(params.m_headerFile);
 
 	QMap<QString, QString> replacementMap;
     replacementMap[QString::fromLatin1("{{CLASS_NAME}}")] = unqualifiedClassName;
 	replacementMap[QString::fromLatin1("{{DATE}}")] = QDate::currentDate().toString();
-    replacementMap[QString::fromLatin1("{{FILE_NAME}}")] = params.headerFile;
+	replacementMap[QString::fromLatin1("{{FILE_NAME}}")] = params.m_headerFile;
 
     QString headerPreamble = readFile(QString::fromLatin1(":/resources/HeaderTemplate.txt"), replacementMap);
     QString classPreamble = readFile(QString::fromLatin1(":/resources/ClassHeaderTemplate.txt"), replacementMap);
 
-    replacementMap[QString::fromLatin1("{{FILE_NAME}}")] = params.sourceFile;
+	replacementMap[QString::fromLatin1("{{FILE_NAME}}")] = params.m_sourceFile;
     QString sourcePreamble = readFile(QString::fromLatin1(":/resources/SourceTemplate.txt"), replacementMap);
     QString sourcebottom = readFile(QString::fromLatin1(":/resources/SourceBriefTemplate.txt"), replacementMap);
 
@@ -298,7 +307,7 @@ bool CppCustomClassWizard::generateHeaderAndSource(const CppCustomClassWizardPar
     // class in case the user did not specify one.
     QString parentQObjectClass;
     bool defineQObjectMacro = false;
-    switch(params.classType) {
+	switch(params.m_classType) {
 		case Utils::NewClassWidget::ClassInheritsQObject:
 			parentQObjectClass = QLatin1String("QObject");
 			defineQObjectMacro = true;
@@ -310,15 +319,15 @@ bool CppCustomClassWizard::generateHeaderAndSource(const CppCustomClassWizardPar
 		default:
 			break;
     }
-    const QString baseClass = params.baseClass.isEmpty()
-                              && params.classType != Utils::NewClassWidget::NoClassType ?
-                              parentQObjectClass : params.baseClass;
+	const QString baseClass = params.m_baseClass.isEmpty()
+							  && params.m_classType != Utils::NewClassWidget::NoClassType ?
+							  parentQObjectClass : params.m_baseClass;
     const bool superIsQtClass = qtClassExpr.exactMatch(baseClass);
     if (superIsQtClass) {
         headerStr << '\n';
         Utils::writeIncludeFileDirective(baseClass, true, headerStr);
     }
-	if (isTestClass) {
+	if (m_isTestClass) {
 		headerStr << '\n';
         Utils::writeIncludeFileDirective(QString::fromLatin1("cppunit/TestFixture.h"), true, headerStr);
         Utils::writeIncludeFileDirective(QString::fromLatin1("cppunit/extensions/HelperMacros.h"), true, headerStr);
@@ -339,7 +348,7 @@ bool CppCustomClassWizard::generateHeaderAndSource(const CppCustomClassWizardPar
 	if (defineQObjectMacro) {
         headerStr << namespaceIndent << "Q_OBJECT\n";
 	}
-	if (isTestClass) {
+	if (m_isTestClass) {
 		headerStr << namespaceIndent << "CPPUNIT_TEST_SUITE( " << unqualifiedClassName << " );\n";
 		headerStr << namespaceIndent << indent << "CPPUNIT_TEST( test );\n";
 		headerStr << namespaceIndent << "CPPUNIT_TEST_SUITE_END();\n";
@@ -348,7 +357,7 @@ bool CppCustomClassWizard::generateHeaderAndSource(const CppCustomClassWizardPar
 	headerStr << namespaceIndent << "public:\n";
     // Constructor
 
-	if (isTestClass) {
+	if (m_isTestClass) {
 		headerStr << namespaceIndent << indent << "void    setUp();\n";
 		headerStr << namespaceIndent << indent << "void    tearDown();\n";
 		headerStr << namespaceIndent << indent << "\n";
@@ -378,11 +387,11 @@ bool CppCustomClassWizard::generateHeaderAndSource(const CppCustomClassWizardPar
     // == Source file ==
     QTextStream sourceStr(source);
 	sourceStr << sourcePreamble;
-    Utils::writeIncludeFileDirective(params.headerFile, false, sourceStr);
+	Utils::writeIncludeFileDirective(params.m_headerFile, false, sourceStr);
 
 	Utils::writeOpeningNameSpaces(namespaceList, QString(), sourceStr);
 
-	if (isTestClass) {
+	if (m_isTestClass) {
 		sourceStr << '\n';
 
 		sourceStr << namespaceIndent << "// Registers the fixture into the 'registry'\n";

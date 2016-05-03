@@ -72,7 +72,6 @@ bool QtcCppunitPlugin::initialize(const QStringList &arguments, QString *error_m
 	
 	Core::Context context(CppEditor::Constants::CPPEDITOR_ID);
 
-	//TODO Allow customizable key sequences
     QAction* createTest = new QAction(tr("Create Test"),  this);
     Core::Command *testCmd = am->registerAction(createTest, Constants::CREATE_TEST, context);
 	testCmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Shift+T")));
@@ -96,13 +95,16 @@ void QtcCppunitPlugin::extensionsInitialized()
 
 namespace {
 
+/*!
+   \brief Return a list of the scope names for a symbol
+*/
 QStringList scopesForSymbol(const Symbol* symbol)
 {
 	if (symbol == 0) return QStringList();
 
-	const Scope *scope = symbol->enclosingScope();
 	QStringList scopes;
 
+	const Scope *scope = symbol->enclosingScope();
 	for (; scope; scope = scope->enclosingScope()) {
 		const Symbol *owner = scope;
 
@@ -117,19 +119,22 @@ QStringList scopesForSymbol(const Symbol* symbol)
 	return scopes;
 }
 
-Symbol* currentSymbol(Core::IEditor *editor)
+/*!
+   \brief Returns the current symbol in the open editor.
+*/
+Symbol* currentSymbol(Core::IEditor* editor)
 {
+	if (editor == 0) return 0;
+
 	int line = editor->currentLine();
 	int column = editor->currentColumn();
 
-	CppTools::CppModelManager *modelManager
-			= CppTools::CppModelManager::instance();
+	CppTools::CppModelManager *modelManager = CppTools::CppModelManager::instance();
 
 	if (!modelManager) {
 		QMessageBox::information(0, QLatin1String("Error"), QLatin1String("Model manager is null"));
 		return 0;
 	}
-
 
 	const Snapshot snapshot = modelManager->snapshot();
 	Document::Ptr doc = snapshot.document(editor->document()->filePath());
@@ -141,14 +146,17 @@ Symbol* currentSymbol(Core::IEditor *editor)
 	return doc->lastVisibleSymbolAt(line, column);
 }
 
+/*!
+   \brief If the current file is a CPP header then switch to the matching source file
+*/
 void switchToSource(Core::IEditor *editor)
 {
+	if (editor == 0) return;
 	// Switch to source file
 	QFileInfo fi(editor->document()->filePath().toFileInfo());
 
 	Utils::MimeDatabase mdb;
-	const Utils::MimeType mimeType = mdb.mimeTypeForFile(fi);
-	const QString typeName = mimeType.name();
+	const QString typeName = mdb.mimeTypeForFile(fi).name();
 	if (typeName == QLatin1String(CppTools::Constants::C_HEADER_MIMETYPE) ||
 		typeName == QLatin1String(CppTools::Constants::CPP_HEADER_MIMETYPE)) {
 		CppTools::switchHeaderSource();
@@ -156,15 +164,17 @@ void switchToSource(Core::IEditor *editor)
 }
 
 
+/*!
+   \brief If the current file is a CPP source file then switch to the matching header file
+*/
 
 void switchToHeader(Core::IEditor *editor)
 {
-	// Switch to source file
+	if (editor == 0) return;
 
 	QFileInfo fi(editor->document()->filePath().toFileInfo());
-	 Utils::MimeDatabase mdb;
-	const Utils::MimeType mimeType = mdb.mimeTypeForFile(fi);
-	const QString typeName = mimeType.name();
+	Utils::MimeDatabase mdb;
+	const QString typeName = mdb.mimeTypeForFile(fi).name();
 
 	if (typeName == QLatin1String(CppTools::Constants::C_SOURCE_MIMETYPE) ||
 		typeName == QLatin1String(CppTools::Constants::CPP_SOURCE_MIMETYPE)) {
@@ -174,6 +184,14 @@ void switchToHeader(Core::IEditor *editor)
 
 }
 
+/*!
+   \brief Create a new test function
+
+   Creates
+	* a function declaration
+	* a function body
+	* adds function to the test suite
+*/
 void QtcCppunitPlugin::createTest()
 {
 	const Core::ICore *core = Core::ICore::instance();
@@ -203,7 +221,7 @@ void QtcCppunitPlugin::createTest()
 	if (functions.size() == 0) return;
 
 	if (testHeader != editor->document()->filePath().toString()) {
-		Core::EditorManager::openEditorAt(testHeader, 0,	0, CppEditor::Constants::CPPEDITOR_ID);
+		Core::EditorManager::openEditorAt(testHeader, 0, 0, CppEditor::Constants::CPPEDITOR_ID);
 	}
 
 	QString functionDeclaration;
@@ -225,7 +243,6 @@ void QtcCppunitPlugin::createTest()
 
 	QString className;
 
-
 	// Write the function in the editor
 	TextEditor::TextEditorWidget *editorWidget = qobject_cast<TextEditor::TextEditorWidget*>(
 			Core::EditorManager::currentEditor()->widget());
@@ -245,10 +262,7 @@ void QtcCppunitPlugin::createTest()
 		editorWidget->moveCursor(QTextCursor::Up);
 		editorWidget->moveCursor(QTextCursor::EndOfLine);
 		editorWidget->insertPlainText(testDeclaration);
-
-
 	}
-
 
 	functionDefinition.replace(QLatin1String("{{CLASSNAME}}"), className);
 

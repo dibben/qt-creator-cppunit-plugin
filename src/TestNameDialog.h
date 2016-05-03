@@ -22,7 +22,7 @@ public:
 
 private:
 
-	Ui::TestNameDialog *ui;
+	Ui::TestNameDialog* ui;
 };
 
 
