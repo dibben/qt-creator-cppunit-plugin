@@ -67,5 +67,8 @@ Using this plugin the TDD workflow is
 
 2. Compile plugin.
 
+## More Information
+
+More information on using the CppUnit with Qt creator is available [here](http://www.codegardening.com/2016/05/using-cppunit-with-qtcreator.html "Using CppUnit with QtCreator")
 
 
