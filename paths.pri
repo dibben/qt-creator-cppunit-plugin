@@ -1,11 +1,9 @@
 ## set the QTC_SOURCE environment variable to override the setting here
 QTCREATOR_SOURCES = $$(QTC_SOURCE)
-isEmpty(QTCREATOR_SOURCES):QTCREATOR_SOURCES=/home/dibben/Develop/QtCreator/qt-creator
-
-QTC_BUILD=/home/dibben/Develop/QtCreator/qt-creator
+isEmpty(QTCREATOR_SOURCES):QTCREATOR_SOURCES=$$PWD/../qtcreator-latest/src
 
 ## set the QTC_BUILD environment variable to override the setting here
-IDE_BUILD_TREE = /home/dibben/Develop/QtCreator/qt-creator
+IDE_BUILD_TREE = $$(QTC_BUILD)
 isEmpty(IDE_BUILD_TREE){
     linux-g++:QMAKE_TARGET.arch = $$QMAKE_HOST.arch
     linux-g++-32:QMAKE_TARGET.arch = x86

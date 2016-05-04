@@ -25,10 +25,8 @@ SOURCES += \
     src/QtcCppUnitPlugin.cpp \
     src/CustomClassWizard.cpp
 
-OTHER_FILES += resources/HeaderTemplate.txt \
-    resources/ClassHeaderTemplate.txt \
-    resources/SourceTemplate.txt \
-    resources/SourceBriefTemplate.txt \
+OTHER_FILES += LICENSE \
+    README.md \
     QtcCppunit.json.in
 
 RESOURCES += qtc-cppunit.qrc

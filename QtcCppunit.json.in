@@ -4,10 +4,10 @@
 	\"CompatVersion\" : \"$$QTCREATOR_COMPAT_VERSION\",
 	\"Experimental\" : true,
 	\"Vendor\" : \"David Dibben\",
-	\"Copyright\" : \"(C) 2014 David Dibben\",
-	\"License\" :  \"\",
-	\"Category\" : \"Custom Plugins\",
-	\"Description\" : \"Cpp Unit Helper plugin.\",
-	\"Url\" : \"\",
+	\"Copyright\" : \"(C) 2016 David Dibben\",
+	\"License\" :  \"MIT license\",
+	\"Category\" : \"C++\",
+	\"Description\" : \"CppUnit Helper plugin.\",
+	\"Url\" : \"https://github.com/dibben/qt-creator-cppunit-plugin\",
 	$$dependencyList
 }
