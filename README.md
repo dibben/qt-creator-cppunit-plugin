@@ -10,6 +10,7 @@ A newer freedesktop.org  fork can be found [here](https://www.freedesktop.org/wi
 
 
 ##Features
+
 * Custom class wizard for creating test case class with necessary boilerplate code.
 * Function to add a new test to a test class
 * Shortcut to switch between testcase and main class
@@ -24,18 +25,22 @@ file this reuqires 3 additions (declaration, addition to test suite and definiti
 The main purpose of this plugin is to remove the tedium of adding a test case. When editing a test case class,
 a new test case dialog can be opened with a shortcut (default Ctrl+Shift+T). A series of space separated test
 functions can be entred and then the plugin in will
+
 * Add a declaration to the test fixture header file
 * Add the test to the test suite for the fixture
 * Add an empty definition in the test source file
 
 The plugin also provides a shortcut to switch to the test case class. This assumes that
+
 * tests are in a subfolder called tests
-* the test case file has the same name as the current file with TestCase appeneded
+* the test case file has the same name as the current file with TestCase appended
+
 So if edition a file MyClass.cpp the shortcut will look for a test file MyClassTestCase.cpp.
 Although using a test-fixture-per-class rather than testing scenarios is something of a
 TDD anti-pattern this can still be useful.
 
 Using this plugin the TDD workflow is
+
 1. Shift+F4 to switch to test case
 2. Ctrl+Shift+T to add new test case
 3. Code the test body
