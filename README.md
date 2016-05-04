@@ -55,6 +55,7 @@ Using this plugin the TDD workflow is
 * Adding custom text snippets in QtCreator makes it easier to add the insert macros
   - eg ```CPPUNIT_ASSERT_EQUAL_MESSAGE("$message$", $expected$, $actual$);```
 * Custom output printers for CppUnit allow MSVC/G++ style messages that can be automatially picked up by QtCreator as issues.
+  - See [cppunit-utilities](https://github.com/dibben/cppunit-utilities, "Github")
 
 
 ##Installation
