@@ -1,6 +1,6 @@
-#Qt Creator CppUnit Helper Plugin
+# Qt Creator CppUnit Helper Plugin
 
-##Introduction
+## Introduction
 
 This Qt Creator plugin adds some helper functions for using CppUnit with Qt Creator.
 
@@ -9,13 +9,13 @@ can be found [here](https://sourceforge.net/projects/cppunit/ "Sourceforge").
 A newer freedesktop.org  fork can be found [here](https://www.freedesktop.org/wiki/Software/cppunit/ "freedesktop.org")
 
 
-##Features
+## Features
 
 * Custom class wizard for creating test case class with necessary boilerplate code.
 * Function to add a new test to a test class
 * Shortcut to switch between testcase and main class
 
-##Background
+## Background
 
 CppUnit requires the test case to be added to a test suite so that it can be run.
 Each new test needs, at minimum, the test case function itself and a separate declaration to
@@ -49,7 +49,7 @@ Using this plugin the TDD workflow is
 6. Implement the code.
 7. Build and run tests again
 
-##Tips
+## Tips
 
 * Adding the test executable as a custom build step means the test are run automatically after each build
 * Adding custom text snippets in QtCreator makes it easier to add the insert macros
@@ -58,9 +58,9 @@ Using this plugin the TDD workflow is
   - See [cppunit-utilities](https://github.com/dibben/cppunit-utilities "Github")
 
 
-##Installation
+## Installation
 
-###From source
+### From source
 1. Set Environment variables (or modify paths.pri directly):
  - set `QTC_SOURCE` variable to path to Qt Creator source dir
  - set `QTC_BUILD` variable to  path to compiled Qt Creator dir
