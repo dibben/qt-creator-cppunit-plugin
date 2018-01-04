@@ -155,8 +155,8 @@ void switchToSource(Core::IEditor *editor)
 	// Switch to source file
 	QFileInfo fi(editor->document()->filePath().toFileInfo());
 
-	Utils::MimeDatabase mdb;
-	const QString typeName = mdb.mimeTypeForFile(fi).name();
+
+	const QString typeName = Utils::mimeTypeForFile(fi).name();
 	if (typeName == QLatin1String(CppTools::Constants::C_HEADER_MIMETYPE) ||
 		typeName == QLatin1String(CppTools::Constants::CPP_HEADER_MIMETYPE)) {
 		CppTools::switchHeaderSource();
@@ -173,8 +173,7 @@ void switchToHeader(Core::IEditor *editor)
 	if (editor == 0) return;
 
 	QFileInfo fi(editor->document()->filePath().toFileInfo());
-	Utils::MimeDatabase mdb;
-	const QString typeName = mdb.mimeTypeForFile(fi).name();
+	const QString typeName = Utils::mimeTypeForFile(fi).name();
 
 	if (typeName == QLatin1String(CppTools::Constants::C_SOURCE_MIMETYPE) ||
 		typeName == QLatin1String(CppTools::Constants::CPP_SOURCE_MIMETYPE)) {

@@ -93,9 +93,9 @@ bool ClassNamePage::lowercaseHeaderFiles()
 // Set up new class widget from settings
 void ClassNamePage::initParameters()
 {
-	Utils::MimeDatabase mdb;
-	m_newClassWidget->setHeaderExtension(mdb.mimeTypeForName(QLatin1String(CppTools::Constants::CPP_HEADER_MIMETYPE)).preferredSuffix());
-	m_newClassWidget->setSourceExtension(mdb.mimeTypeForName(QLatin1String(CppTools::Constants::CPP_SOURCE_MIMETYPE)).preferredSuffix());
+
+	m_newClassWidget->setHeaderExtension(Utils::mimeTypeForName(QLatin1String(CppTools::Constants::CPP_HEADER_MIMETYPE)).preferredSuffix());
+	m_newClassWidget->setSourceExtension(Utils::mimeTypeForName(QLatin1String(CppTools::Constants::CPP_SOURCE_MIMETYPE)).preferredSuffix());
 	m_newClassWidget->setLowerCaseFiles(lowercaseHeaderFiles());
 }
 
